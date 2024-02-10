@@ -1,0 +1,66 @@
+From efa03b54fcbdf7e326646be51bed84080f9d240c Mon Sep 17 00:00:00 2001
+From: blossompainter <blossompainter245@gmail.com>
+Date: Fri, 9 Feb 2024 20:25:27 -0500
+Subject: [PATCH] Updated Ratio and Data Point Functions in client3.py
+
+---
+ .DS_Store  | Bin 0 -> 6148 bytes
+ client3.py |  11 ++++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+ create mode 100644 .DS_Store
+
+diff --git a/.DS_Store b/.DS_Store
+new file mode 100644
+index 0000000000000000000000000000000000000000..a1a50e3469ba36ffa4f0a1b7d48cbd130b30ba84
+GIT binary patch
+literal 6148
+zcmeHKyH3ME5ZntcEYYN-ye~jXK}T^!rbkLehfJh^6w4`~cgIIjQ1M+b`vBRpLP-I$
+z(%$%XcYO8~UayFx_49TmvJ{aTt|%|M%uVy^Gh0NY0w%r3ez)4(_uXMuc|4%pO3q~`
+zkMcC-e_V`nUEehAzHbq$-@5kl_VxX0n&1AIKRk?{ZE*uCjS5f!DnJFOz`s-gJzK3l
+zb>vC~r~noCRzSZG8Ln6Y2S@vKV6hPZsK4=MxVBjWm^A<_frBF=u;f&rQ&Wr>$?1sa
+zs4IbkqthkX$+%CPoMJ*rb~@tO$|V&?u2g^uOcgls?Na;yHT=l@KP7QT1*pKEQXo~$
+zrdi{aqPNaoPJ3;J-@(5OwN{SBS~1XCF*e$Y&qj4wuaPf-gQL+AH#(3%0;&s*3jBrw
+EpO3~VNB{r;
+
+literal 0
+HcmV?d00001
+
+diff --git a/client3.py b/client3.py
+index 3fc09b7..3d4edf9 100644
+--- a/client3.py
++++ b/client3.py
+@@ -35,14 +35,17 @@ def getDataPoint(quote):
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = bid_price
++    price = (bid_price + ask_price) / 2;
+     return stock, bid_price, ask_price, price
+ 
+ 
+ def getRatio(price_a, price_b):
+     """ Get ratio of price_a and price_b """
+     """ ------------- Update this function ------------- """
+-    return 1
++    if(price_b == 0):
++        # when price_b is 0 avoid throwing ZeroDivisionError
++        return
++    return price_a / price_b;
+ 
+ 
+ # Main
+@@ -52,8 +55,10 @@ if __name__ == "__main__":
+         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+         """ ----------- Update to get the ratio --------------- """
++        prices = {}
+         for quote in quotes:
+             stock, bid_price, ask_price, price = getDataPoint(quote)
++            prices[stock] = price;
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+-        print("Ratio %s" % getRatio(price, price))
++        print("Ratio %s" % getRatio(prices["ABC"], prices["DEF"]))
+-- 
+2.39.3 (Apple Git-145)
+
